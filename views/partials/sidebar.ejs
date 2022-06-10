@@ -1,0 +1,89 @@
+<style>
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        left: 0;
+        /*top: calc(100% + 0.75rem);        THIS BREAKS THE DROPDOWN... IDK HOW TO FIX IT*/
+        background-color: white;
+        padding: .75rem;
+        border-radius: .25rem;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,.1);
+    }
+
+    .dropdown {
+        position: relative;
+    }
+
+    .dropdown > #dropbtn:focus + .dropdown-content {
+        display: block;
+        opacity: 1;
+    }
+
+    .dropdown-content:hover {
+        display: block;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown-content a {
+        color: black;
+        padding: 4px 0;
+        display: block;
+    }
+
+    .dropdown-content a:hover {
+        display: block;
+        color: grey;
+    }
+</style>
+
+<div class="grow max-w-[20%] hidden lg:block">
+    <div class="text-sm font-bold py-2 pl-2 pt-4">
+        SOLA DAT Actuarial Models
+    </div>
+    <div class="text-sm text-gray-600 bg-white hover:bg-gray-50 my-1 py-1 pl-2 mr-2 rounded-lg">
+        <a href="/documentation">
+            Introduction
+        </a>
+    </div>
+    <div class="text-sm text-gray-600 bg-white hover:bg-gray-50 my-1 py-1 pl-2 mr-2 rounded-lg">
+        <a href="/documentation/methodology">
+            Methodology
+        </a>
+    </div>
+    <div class="text-sm text-gray-600 bg-white hover:bg-gray-50 my-1 py-1 pl-2 mr-2 rounded-lg">
+        <a href="/documentation/incomplete_data">
+            Incomplete Data
+        </a>
+    </div>
+    <div class="text-sm text-gray-600 bg-white hover:bg-gray-50 my-1 py-1 pl-2 mr-2 rounded-lg">
+        <a href="/documentation/future_plans">
+            Future Plans
+        </a>
+    </div>
+</div>
+
+<div class="relative dropdown max-w-full w-full mx-2 my-2 inline-block text-left lg:hidden block">
+    <div>
+        <button type="button" id="dropbtn" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none" id="menu-button" aria-expanded="true" aria-haspopup="true">
+            Select a page
+            <!-- Heroicon name: solid/chevron-down -->
+            <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+        </button>
+    </div>
+    <div class="origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+        <div class="py-1 dropdown-content w-full" role="none">
+            <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+            <a href="/documetation" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0">Introduction</a>
+            <a href="/documentation/methodology" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-1">Methodology</a>
+            <a href="/documentation/incomplete_data" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-2">Incomplete Data</a>
+        </div>
+    </div>
+
+</div>
+
+<div class="border-b-[1pt]"></div>

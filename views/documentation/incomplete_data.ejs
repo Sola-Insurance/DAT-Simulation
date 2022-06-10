@@ -1,0 +1,55 @@
+<body>
+<div class="flex flex-1 flex-wrap max-w-full lg:max-w-[80%] mx-auto min-h-screen">
+    <%- include('../partials/sidebar.ejs')%>
+    <div class="grow lg:max-w-[60%] max-w-full lg:border-x-[1px] lg:overflow-y-scroll pb-6">
+        <div class="text-4xl pt-10 px-6 font-bold pb-4">Incomplete Data</div>
+        <div class="text-xl pt-6 px-6 font-bold pb-2">
+            Summary
+        </div>
+        <div class="text-md pt-4 px-6 pr-16 text-gray-700">The DAT API which Sola uses as the dataset for this model may return incomplete, inconsistent, or blank data. This requires us
+            to manually adjust our models accordingly. This tab will document the current inaccuracies that we're aware of and how far along we are in adjusting for them.
+        </div>
+        <div class="text-md pt-4 px-6 pr-16 text-red-700">Warning, over the years 2011-2017, the DAT may be missing tornado data.
+        </div>
+        <div class="text-md pt-4 px-6 pr-16 ml-8 text-gray-700 list-decimal">
+            <li>States in the <span class="text-green-700">"Completed"</span> section have been checked and are accurate based on the DAT data</li>
+            <li>States in the <span class="text-yellow-700">"Incomplete"</span> section have NOT been checked and may NOT be accurate</li>
+            <li>States in the <span class="text-red-700">"Errors"</span> section have data from the DAT that is not compatible with our models at the time. We are currently working to resolve this issue.</li>
+        </div>
+        <div class="text-xl pt-6 px-6 font-bold pb-2 text-green-700">
+            Completed
+        </div>
+        <div class="text-md pt-4 px-6 pr-16 ml-8 text-gray-700 list-dot">
+            <li>Alabama</li>
+            <li>Arkansas</li>
+            <li>Florida</li>
+            <li>Indiana</li>
+            <li>Louisiana</li>
+            <li>Mississippi</li>
+            <li>Nebraska</li>
+            <li>Ohio</li>
+            <li>Pennsylvania</li>
+            <li>Tennessee</li>
+        </div>
+        <div class="text-xl pt-6 px-6 font-bold pb-2 text-yellow-700">
+            Incomplete
+        </div>
+        <div class="text-md pt-4 px-6 pr-16 ml-8 text-gray-700 list-dot">
+            <li>Texas (years 2015, 2016, and 2019)</li>
+            <li>Georgia (year 2020)</li>
+            <li>Wisconsin (year 2019)</li>
+            <li>Missouri (years 2015, 2017, and 2019)</li>
+            <li>Kansas (year 2019)</li>
+            <li>Kentucky (year 2019)</li>
+            <li>Illinois (years 2015, 2019, and 2020)</li>
+        </div>
+        <div class="text-xl pt-6 px-6 font-bold pb-2 text-red-700">
+            Errors
+        </div>
+        <div class="text-md pt-4 px-6 pr-16 ml-8 text-gray-700 list-dot">
+            <li>Oklahoma</li>
+            <li>Iowa</li>
+        </div>
+    </div>
+</div>
+</body>

@@ -1,0 +1,339 @@
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css' rel='stylesheet' />
+
+<script>
+    const centerString = '<%- JSON.stringify(center)%>'
+    const zoom = '<%- zoom%>'
+    const state = '<%= state%>'
+    const year = '<%- year%>'
+</script>
+
+<style>
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        left: 0;
+        /*top: calc(100% + 0.75rem);        THIS BREAKS THE DROPDOWN... IDK HOW TO FIX IT*/
+        background-color: white;
+        padding: .75rem;
+        border-radius: .25rem;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,.1);
+    }
+    
+    #dropdown {
+        position: relative;
+    }
+    
+    #dropdown > #dropbtn:focus + .dropdown-content {
+        display: block;
+        opacity: 1;
+    }
+    
+    .dropdown-content:hover {
+        display: block;
+    }
+    
+    #dropdown:hover .dropdown-content {
+        display: block;
+    }
+    
+    .dropdown-content a {
+      color: black;
+      padding: 4px 0;
+      display: block;
+    }
+    
+    .dropdown-content a:hover {
+        display: block;
+        color: grey;
+    }
+</style>
+
+<div class="max-w-5xl mx-auto pt-8 pb-[1px] text-center pb-2 text-lg font-bold">
+    <div id="dropdown" class="inline">
+        <button href="/" class="mt-4 lg:inline-flex lg:mt-0 mx-[1px] text-primary hover:text-secondary text-center" id="dropbtn">
+            <%= state[0].toUpperCase() + state.substring(1) %>
+        </button>
+        <div class = "dropdown-content z-50 font-normal font-normal text-md text-left">
+            <a href="/payouts/alabama">Alabama</a>
+            <a href="/payouts/arkansas">Arkansas</a>
+            <a href="/payouts/florida">Florida</a>
+            <a href="/payouts/georgia">Georgia</a>
+            <a href="/payouts/illinois">Illinois</a>
+            <a href="/payouts/indiana">Indiana</a>
+            <a href="/payouts/kansas">Kansas</a>
+            <a href="/payouts/kentucky">Kentucky</a>
+            <a href="/payouts/louisiana">Louisiana</a>
+            <a href="/payouts/mississippi">Mississippi</a>
+            <a href="/payouts/missouri">Missouri</a>
+            <a href="/payouts/nebraska">Nebraska</a>
+            <a href="/payouts/ohio">Ohio</a>
+<!--            <a href="/payouts/oklahoma">Oklahoma</a>-->
+            <a href="/payouts/pennsylvania">Pennsylvania</a>
+            <a href="/payouts/tennessee">Tennessee</a>
+            <a href="/payouts/texas">Texas</a>
+            <a href="/payouts/wisconsin">Wisconsin</a>
+        </div>
+    </div>
+    <p class="inline">Payouts for</p>
+    <form action="/payouts/<%- state%>" method="POST" data-dropup-auto="false" class="flex mx-auto justify-items-center inline-flex text-primary">
+<!--        <span class="dropdown">-->
+<!--        <button href="/" class="block text-center font-bold text-primary underline mt-4 lg:inline-block lg:mt-0 mx-[1px]" id="dropbtn">-->
+<!--            <%= year%>-->
+<!--        </button>-->
+<!--        <div class = "dropdown-content z-50">-->
+<!--            <a type="submit">2011</a>-->
+<!--            <a type="submit">2012</a>-->
+<!--        </div>-->
+<!--        </span>-->
+        <select name="year" id="year" onchange="this.form.submit()">
+            <option value="2011">2011</option>
+            <option value="2012">2012</option>
+            <option value="2013">2013</option>
+            <option value="2014">2014</option>
+            <option value="2015">2015</option>
+            <option value="2016">2016</option>
+            <option value="2017">2017</option>
+            <option value="2018">2018</option>
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+        </select>
+    </form>
+    <p id="policyholderNum" class="inline">(~39,000 policyholders)</p>
+     
+</div>
+
+<script>
+    let json
+    var url = `https://raw.githubusercontent.com/Sola-Relief/samplebooks/main/${state}Statistics${year}.json`;
+    fetch(url)
+        .then(response => response.json())
+        .then(tempJson => {
+            json = tempJson
+            document.getElementById('policyholderNum').innerHTML = `(${json.Statistics[0].numHomes.toLocaleString('en-US')} policyholders)`
+        })
+</script>
+
+<div id='ala-map' class="max-w-5xl mx-auto h-[400px] py-12"></div>
+
+<br>
+<% if (!acc) { %>
+<div class="max-w-5xl mx-auto text-lg text-center text-red-700 font-light">Warning, data may be inaccurate. For more details, please review our <a class=" underline" href="/documentation">Documentation</a></div>
+<% } %>
+<div id = 'dataBox' class="max-w-3xl mx-auto flex justify-evenly basis-1/2 flex-wrap pb-10 lg:text-left md:text-center" onload="updateStats();">
+    <div class="pt-8 pb-2">
+        <div class="text-xl font-bold">
+            Statistics
+        </div>
+        <div class="flex items-center max-w-[300px]">
+            <div class="pr-2">
+                Number of Homeowners:
+            </div>
+            <div class="pr-2" id="numHomes"></div>
+        </div>
+        <div class="flex items-center max-w-[300px]">
+            <div class="pr-2">
+                Gross Loss Ratio:
+            </div>
+            <div class="pr-2" id="glr"></div>
+        </div>
+        <div class="flex items-center max-w-[300px]">
+            <div class="pr-2">
+                Net Loss Ratio:
+            </div>
+            <div class="pr-2" id="nlr"></div>
+        </div>
+        <div class="flex items-center max-w-[300px]">
+            <div class="pr-2">
+                Total Payouts:
+            </div>
+            <div class="pr-2" id="totalPayout"></div>
+        </div>
+        <div class="flex items-center max-w-[300px]">
+            <div class="pr-2">
+                Average Payout:
+            </div>
+            <div class="pr-2" id="avgPayout"></div>
+        </div>
+        <div class="flex items-center max-w-[300px]">
+            <div class="pr-2">
+                Maximum Payout:
+            </div>
+            <div class="pr-2" id="maxPayout"></div>
+        </div>
+        <div class="flex items-center max-w-[300px]">
+            <div class="pr-2">
+                Number of Payouts:
+            </div>
+            <div class="pr-2" id="numPayouts"></div>
+        </div>
+    </div>
+
+    <div class="pt-8 pb-2">
+        <div class="text-xl font-bold">
+            Key
+        </div>
+        <div class="flex items-center max-w-[180px]">
+            <div class="pr-2">
+                Sample Homeowner:
+            </div>
+            <div class="ml-auto">
+                <svg width="20" height="20">
+                    <rect rx="20" ry="20" width="20" height="20"
+                          style="fill:#cccccc;opacity:1" />
+                </svg>
+            </div>
+        </div>
+        <div class="flex items-center max-w-[150px]">
+            <div class="pr-2">
+                $2,000 Payout:
+            </div>
+            <div class="ml-auto">
+                <svg width="20" height="20">
+                    <rect rx="20" ry="20" width="20" height="20"
+                          style="fill:#0089de;opacity:1" />
+                </svg>
+            </div>
+        </div>
+        <div class="flex items-center max-w-[150px]">
+            <div class="pr-2">
+                $5,000 Payout:
+            </div>
+            <div class="ml-auto">
+                <svg width="20" height="20">
+                    <rect rx="20" ry="20" width="20" height="20"
+                          style="fill:#09d66f;opacity:1" />
+                </svg>
+            </div>
+        </div>
+        <div class="flex items-center max-w-[150px]">
+            <div class="pr-2">
+                $7,500 Payout:
+            </div>
+            <div class="ml-auto">
+                <svg width="20" height="20">
+                    <rect rx="20" ry="20" width="20" height="20"
+                          style="fill:#eef200;opacity:1" />
+                </svg>
+            </div>
+        </div>
+        <div class="flex items-center max-w-[150px]">
+            <div class="pr-2">
+                $10,000 Payout:
+            </div>
+            <div class="ml-auto">
+                <svg width="20" height="20">
+                    <rect rx="20" ry="20" width="20" height="20"
+                          style="fill:#e08804;opacity:1" />
+                </svg>
+            </div>
+        </div>
+        <div class="flex items-center max-w-[150px]">
+            <div class="pr-2">
+                $15,000 Payout:
+            </div>
+            <div class="ml-auto">
+                <svg width="20" height="20">
+                    <rect rx="20" ry="20" width="20" height="20"
+                          style="fill:#e00404;opacity:1" />
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>    
+    document.getElementById('year').value = year
+
+    function updateStats() {
+        var url = `https://raw.githubusercontent.com/Sola-Relief/samplebooks/main/${state}Statistics${year}.json`;
+        fetch(url)
+            .then(response => response.json())
+            .then(json => {
+
+                document.getElementById('numHomes').innerHTML = json.Statistics[0].numHomes.toLocaleString('en-US');
+                document.getElementById('glr').innerHTML = `${parseFloat((json.Statistics[0].grossLossRatio) * 100).toFixed(2)}%`;
+                document.getElementById('nlr').innerHTML = `${parseFloat((json.Statistics[0].netLossRatio) * 100).toFixed(2)}%`;
+                document.getElementById('totalPayout').innerHTML = `$${json.Statistics[0].totalPayout.toLocaleString('en-US')}`;
+                document.getElementById('avgPayout').innerHTML = `$${parseFloat(json.Statistics[0].avgPayout).toFixed(2).toLocaleString('en-US')}`;
+                document.getElementById('maxPayout').innerHTML = `$${json.Statistics[0].maxPayout.toLocaleString('en-US')}`;
+                document.getElementById('numPayouts').innerHTML = json.Statistics[0].numPayouts.toLocaleString('en-US');
+
+            })
+    }
+
+    updateStats();
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoiamVmZi16aG91IiwiYSI6ImNsMXBwb2VubDAycXIzam85dHdvOW9qaHoifQ.9-RvEvxWutVJbvc0Y9ma8Q';
+    const alaMap = new mapboxgl.Map({
+        container: 'ala-map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        zoom: zoom,
+        center: JSON.parse(centerString)
+    });
+
+    alaMap.on('load', () => {
+        alaMap.addSource('all-holders', {
+            type: 'geojson',
+            data: `https://raw.githubusercontent.com/Sola-Relief/samplebooks/main/${state}Points.json`
+        });
+
+        alaMap.addSource('payout-holders', {
+            type: 'geojson',
+            data: `https://raw.githubusercontent.com/Sola-Relief/samplebooks/main/${state}Payouts${year}.json`
+        })
+
+        alaMap.addLayer({
+            'id': 'all-layer',
+            'type': 'circle',
+            'source': 'all-holders',
+            'paint': {
+                'circle-radius': {
+                    'base': 2,
+                    'stops': [
+                        [2, 2],
+                        [10, 5]
+                    ]
+                },
+                'circle-color': '#cccccc',
+            }
+        });
+
+        alaMap.addLayer({
+            'id': 'payout-layer',
+            'type': 'circle',
+            'source': 'payout-holders',
+            'paint': {
+                'circle-radius': {
+                    'base': 2,
+                    'stops': [
+                        [2, 3],
+                        [10, 10]
+                    ]
+                },
+                'circle-color': [
+                    'match',
+                    ['get', 'severity'],
+                    'EF0',
+                    '#0089de',
+                    'EF1',
+                    '#0089de',
+                    'EF2',
+                    '#09d66f',
+                    'EF3',
+                    '#eef200',
+                    'EF4',
+                    '#e08804',
+                    'EF5',
+                    '#e00404',
+                    /* other */ '#f2b80a'
+                ]
+            }
+        })
+    });
+</script>

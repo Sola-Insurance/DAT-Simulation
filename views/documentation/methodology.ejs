@@ -1,0 +1,44 @@
+<body>
+<div class="flex flex-1 flex-wrap max-w-full lg:max-w-[80%] mx-auto min-h-screen">
+    <%- include('../partials/sidebar.ejs')%>
+    <div class="grow lg:max-w-[60%] max-w-full lg:border-x-[1px] lg:overflow-y-scroll">
+        <div class="text-4xl pt-10 px-6 font-bold pb-4">Methodology</div>
+        <div class="text-xl pt-6 px-6 font-bold pb-2">
+            Summary
+        </div>
+        <div class="text-md pt-4 px-6 pr-16 text-gray-700">To generate this simulation data, we use the national weather service’s damage assessment toolkit to determine where and when
+            tornado strikes occurred. This data is served in 3 forms: polygons, lines, and points.
+            We process these data points with our algorithm, which gives us a map of all the policyholders receiving payouts, and the respective values of those payouts.
+        </div>
+        <div class="text-xl pt-6 px-6 font-bold pb-2">
+            Generating Sample Homeowners
+        </div>
+        <div class="text-md pt-4 px-6 pr-16 text-gray-700">For this model, Sola generated around 40,000 points per state that simulate sample Sola policyholders. For each state, the same set of points
+            is used for each year. Points were generated using the following method:
+        </div>
+        <div class="text-md pt-4 px-6 pr-16 ml-8 text-gray-700 list-decimal">
+            <li>Use RapidAPI to represent the zip code as a polygon</li>
+            <li>Generate x number of points randomly based on population density of the zip code</li>
+            <li>Repeat for every zip code</li>
+            <li>Repeat for every year</li>
+        </div>
+        <div class="text-xl pt-6 px-6 font-bold pb-2">
+            Calculating Sample Payouts
+        </div>
+        <div class="text-md pt-4 px-6 pr-16 text-gray-700">To calculate sample payouts for this model, Sola used the DAT from the NWS. Payouts were calculated using
+            the following method:
+        </div>
+        <div class="text-md pt-4 px-6 pr-16 ml-8 text-gray-700 list-decimal">
+            <li>Query polygons for a month from the DAT </li>
+            <li>Combine polygons into a multipolygon</li>
+            <li>Repeat for every month</li>
+            <li>Repeat with lines and points, combining them into multilinestrings and multipoints respectively</li>
+            <li>Query sample policyholders based on damage within the multipolygon, 500ft of the multilinestring, and 500ft of multipoints</li>
+            <li>Filter out duplicates</li>
+            <li>Generate visualization of points and payouts</li>
+            <li>Generate statistics</li>
+            <li>Repeat for every state</li>
+        </div>
+    </div>
+</div>
+</body>
