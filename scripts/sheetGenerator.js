@@ -1,12 +1,13 @@
 const { google } = require("googleapis");
 const fs = require('fs')
-const logUpdate = require('log-update')
 
+// Authenticating Google Sheets API
 const auth = new google.auth.GoogleAuth({
     keyFile: "credentials.json",
     scopes: "https://www.googleapis.com/auth/spreadsheets", 
 });
 
+// Dictionary containing offset values for rows based on the current state
 const offsetDict = {
     AL: 0,
     AR: 1,
@@ -29,6 +30,7 @@ const offsetDict = {
     WI: 18
 }
 
+// Dictionary containing all state codes
 const stateDict = {
     alabama: "AL",
     arkansas: "AR",
@@ -51,6 +53,7 @@ const stateDict = {
     wisconsin: "WI"
 }
 
+// Dictionary containing all column values based on the current year
 const columnDict = {
     2011: "B",
     2012: "C",
@@ -65,6 +68,7 @@ const columnDict = {
     2021: "L"
 }
 
+// Dictionary containing all row values based on the statistic we are entering
 const rowDict = {
     avgPayout: 121,
     grossLossRatio: 52,
@@ -75,8 +79,12 @@ const rowDict = {
     totalPayout: 29
 }
 
+// Generates the data object to batch update the sheet when given an array of statistic geojsons
 async function genRequests(files, data) {
+
+    // Iterates through the files
     for (let fileName of files) {
+        // Parsing filename and searching for identifying values
         const split = fileName.split('Statistics')
 
         const state = split[0]
@@ -87,9 +95,11 @@ async function genRequests(files, data) {
     
         let column = columnDict[year];
     
+        // Reading JSON file
         const rawFile = await fs.readFileSync(`../../samplebooks/${fileName}`);
         const stats = await JSON.parse(rawFile).Statistics[0];
 
+        // Formatting statistics
         stats.grossLossRatio = parseFloat((stats.grossLossRatio) * 100).toFixed(2)
         stats.numHomes = stats.numHomes.toLocaleString('en-US');
         stats.netLossRatio = `${parseFloat((stats.netLossRatio) * 100).toFixed(2)}%`;
@@ -98,8 +108,9 @@ async function genRequests(files, data) {
         stats.maxPayout = `$${stats.maxPayout.toLocaleString('en-US')}`;
         stats.numPayouts = stats.numPayouts.toLocaleString('en-US');
     
+        // Adding each statistic to the data array as a request if it is not null
         for ([key, value] of Object.entries(stats)) {
-            if (value != null && value != 0 && value != '0.00%' && value != '$0' && value != '$NaN') {
+            if (value != null && value != '$NaN') {
                 const row = rowDict[key] + offset;
         
                 let cell = `${column}${row}`
@@ -121,6 +132,10 @@ async function genRequests(files, data) {
     return Promise.resolve(data)
 }
 
+/**
+ *  Generates all request jsons and then calls batch update 
+ *  to update the google sheets document all at once
+ * */
 async function runner(files) {
     let data = []
     const client = await auth.getClient();
@@ -141,6 +156,8 @@ async function runner(files) {
     })
 }
 
+// Local directory for all statistic files
 const files = fs.readdirSync('../../samplebooks/').slice(2);
 
+// Function call
 runner(files)

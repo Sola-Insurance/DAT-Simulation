@@ -7,8 +7,6 @@ const generateGeoJson = require('./generategeojson')
 
 const states = ['illinois', 'indiana', 'iowa', 'kansas', 'kentucky', 'louisiana', 'mississippi', 'missouri', 'nebraska', 'ohio', 'pennsylvania', 'tennessee', 'texas', 'wisconsin', 'florida', 'georgia', 'arkansas', 'oklahoma', 'alabama']
 
-//const states = ['georgia']
-
 // Generates all payouts for policyholders within a certain date range
 async function payoutRunner(year, state) {
     let map = new Map()
@@ -40,7 +38,6 @@ const numMonths = 12
 
 async function run() {
     for (let state of states) {
-        //let state = states[2]
         let years = [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021]
 
         for (const element of years) {
