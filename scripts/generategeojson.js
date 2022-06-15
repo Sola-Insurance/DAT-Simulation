@@ -62,11 +62,13 @@ async function findTHbyPayout(list, map) {
 async function allTH(state) {
     const houses = require(`../models/${state}house`)
     const tempPH = await houses.find({})
+    numHomes = tempPH.length
 
     let geoJson = {
         type: "FeatureCollection",
         features: []
     }
+
     for (const ph of tempPH) {
         const phPoint = {
             type: "Feature",
@@ -121,16 +123,12 @@ async function statGenerator(map, year, state) {
             console.log("Points Generated")
     })
 
-    const homeCounter = await houses.find({})
-    numHomes = homeCounter.length
-
     let avgPayout = totalPayout / numPayouts;
     let gwp = policyPrice * numYears * numHomes;
     let grossLossRatio = totalPayout / gwp;
     let netLossRatio = grossLossRatio / 0.7;
 
     let statJson = {Statistics:[{numHomes: numHomes, grossLossRatio: grossLossRatio, netLossRatio: netLossRatio, totalPayout: totalPayout, avgPayout: avgPayout, maxPayout: maxPayout, numPayouts: numPayouts}]};
-
     const statJsonString = JSON.stringify(statJson)
 
     // Writes json file to a directory
