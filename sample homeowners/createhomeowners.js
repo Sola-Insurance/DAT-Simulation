@@ -18,13 +18,12 @@ const homeownerCap = 33300
 const start = 0
 let totalSample = 0
 
-// MAKE SURE TO SET THESE FOUR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-let i = 2; // go to 16
+
+let i = 2; // range: 0-18
 
 const state = states[i][0];
 const TOTAL_POP = states[i][2] * 1000000;
 const stateID = states[i][1];
-// MAKE SURE TO SET THESE FOUR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 // Requiring mongo schema
