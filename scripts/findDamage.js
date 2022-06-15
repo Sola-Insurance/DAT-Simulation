@@ -309,22 +309,6 @@ async function runGenGeoms(dates, state) {
         }
 
         if (value.length > 0) {
-            // let union = value[0]
-            //
-            // let progressString = `Generating EF${num} MultiPolygon: 0/${value.length}`
-            // logUpdate(progressString)
-            //
-            // for (let i = 1; i < value.length; i++) {
-            //     progressString = `Generating EF${num} MultiPolygon: ${i}/${value.length}`
-            //     logUpdate(progressString)
-            //     //console.log(value[i].geometry.coordinates)
-            //     union = turf.union(union, value[i])
-            // }
-            //
-            // progressString = `Generating EF${num} MultiPolygon: ${value.length}/${value.length}`
-            // logUpdate(progressString)
-
-            
             let i = 0
 
             let progressString = `Generating EF${num} MultiPolygon`
