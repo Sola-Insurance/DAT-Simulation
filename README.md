@@ -8,9 +8,13 @@
 This file is generated from boudaries-io by RAPID API. This API estimates each zip code in the United States as a geojson polygon. The json is an array of geojson objects
 each with a defined zip code.
 
+Access this file here: https://drive.google.com/file/d/1Ug9p8d7yfrdGoGBbZ5EpDsjLyjCI7IpN/view?usp=sharing
+
 ### uszips.csv
 
 This file is a document that tracks the population of each zipcode in the US. Sola uses this file to generate sample homeowners based on population density.
+
+Access this file here: https://drive.google.com/file/d/1GJOIYf7mMxvY0qfCW6l2gnR82FBxE_3X/view?usp=sharing
 
 ## Scripts
 
