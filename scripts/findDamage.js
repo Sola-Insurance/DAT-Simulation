@@ -33,6 +33,7 @@ const rawdata = fs.readFileSync('statepolys.json')
 const statepolys = JSON.parse(rawdata)
 let state
 
+// Declaring some constant vars
 const ONE_DAY_MILLISECONDS = 86400000
 const EF = ['EF0', 'EF1' ,'EF2', 'EF3', 'EF4', 'EF5']
 
@@ -50,7 +51,7 @@ class DamagePolygon {
     }
 }
 
-// holder for Damaged house
+// Class for a Damaged house
 class DamagedHouse {
     constructor(holder, severity, payout) {
         this.holder = holder
@@ -189,7 +190,7 @@ async function fetchDAT(num, startDate, endDate, numTries) {
     }
 }
 
-// Generates a dictionary of EF level polygons when given a url
+// Generates a dictionary of polygons by EF level when given a date range and polygon type to search for
 async function generateGeom(startDate, endDate, typeNum, type, state) {
 
     let polygonDict = {
@@ -236,28 +237,14 @@ async function generateGeom(startDate, endDate, typeNum, type, state) {
 
             try {
                 tempPolygon = turf.polygon(polygon.coords.coordinates)
-/*
-                arr = polygon.coords.coordinates[0]
-
-                for (let i = 0; i < arr.length; i++) {
-                    let x = arr[i][0]
-                    let y = arr[i][1]
-
-                    if (Math.abs(x) > 100 || Math.abs(y) > 45) {
-                        console.log(arr[i]);
-                    }
-                }*/
 
             }   catch(e) {
-                console.log(polygon)
                 console.log(e)
-                console.log(polygon)
             }
 
 
             if (turf.booleanOverlap(newStatePoly, tempPolygon) || turf.booleanContains(newStatePoly, tempPolygon)) {
                 await polygonDict[ef].push(tempPolygon)
-
                 await updateConsole(num, max, false, type)
             }
         }
@@ -322,22 +309,6 @@ async function runGenGeoms(dates, state) {
         }
 
         if (value.length > 0) {
-            // let union = value[0]
-            //
-            // let progressString = `Generating EF${num} MultiPolygon: 0/${value.length}`
-            // logUpdate(progressString)
-            //
-            // for (let i = 1; i < value.length; i++) {
-            //     progressString = `Generating EF${num} MultiPolygon: ${i}/${value.length}`
-            //     logUpdate(progressString)
-            //     //console.log(value[i].geometry.coordinates)
-            //     union = turf.union(union, value[i])
-            // }
-            //
-            // progressString = `Generating EF${num} MultiPolygon: ${value.length}/${value.length}`
-            // logUpdate(progressString)
-
-            
             let i = 0
 
             let progressString = `Generating EF${num} MultiPolygon`

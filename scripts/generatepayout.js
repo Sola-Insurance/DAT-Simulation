@@ -9,7 +9,6 @@ const findDamage = require('./findDamage')
 async function addPayoutTH(state, numMonths, startMonth, startYear) {
         let dates = await genDates(numMonths, startMonth, startYear)
         let houseMap = new Map()
-        const houseSchema = require(`../models/${state}house`)
 
         // Finds all damaged houses and outputs an array of both a map and array of damaged houses
         await findDamage.findHouses(dates, state)
