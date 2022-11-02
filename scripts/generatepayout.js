@@ -61,4 +61,4 @@ function genDates(numMonths, startMonth, startYear) {
     return dates
 }
 
-module.exports = {addPayoutTH}
+module.exports = { addPayoutTH }
